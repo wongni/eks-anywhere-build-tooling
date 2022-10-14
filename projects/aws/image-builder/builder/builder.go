@@ -54,6 +54,16 @@ func (b *BuildOptions) BuildImage() {
 	var outputImageGlob []string
 	commandEnvVars := []string{fmt.Sprintf("RELEASE_BRANCH=%s", b.ReleaseChannel)}
 
+	if b.CustomPatches != "" {
+		imageBuilderPatchesPath := filepath.Join(imageBuilderProjectPath, "patches")
+		log.Printf("Copying custom patches from %s to  %s\n", b.CustomPatches, imageBuilderPatchesPath)
+		copyCommand := fmt.Sprintf("cp %s/* %s", b.CustomPatches, imageBuilderPatchesPath)
+		err := executeMakeBuildCommand(copyCommand)
+		if err != nil {
+			log.Fatalf("Error executing cp command for apply custom patches: %v", err)
+		}
+	}
+
 	log.Printf("Initiating Image Build\n Image OS: %s\n Hypervisor: %s\n", b.Os, b.Hypervisor)
 	if b.Hypervisor == VSphere {
 		// Read and set the vsphere connection data

@@ -25,6 +25,7 @@ type BuildOptions struct {
 	CloudstackConfig *CloudstackConfig
 	ReleaseChannel   string
 	artifactsBucket  string
+	CustomPatches    string
 	Force            bool
 }
 
